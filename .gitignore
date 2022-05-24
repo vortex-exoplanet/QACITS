@@ -127,3 +127,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Mac
+.DS_Store
+
+#Editors
+.*.swp
+
+#Google Drive
+.tmp.driveupload
+
+#Visual Studio Code
+.vscode/
