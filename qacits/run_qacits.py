@@ -1,14 +1,11 @@
 from qacits.util.bin_images import bin_images
-from qacits.util.circle_mask import circle_mask
-from qacits.util.get_delta_i import get_delta_i
-from photutils import CircularAperture, aperture_photometry
-
-
+from qacits.util.psf_flux import get_psf_flux, get_all_di
 import numpy as np
 
 
-def run_qacits(psf_ON, psf_OFF, fwhm, inner_slope=1, outer_slope=1, full_coeff=1,
-        radii={'inner':(0,1.7),'outer':(1.7,2.3),'full':(0, 2.7)}, force=None,
+def run_qacits(psf_ON, psf_OFF, img_sampling, cx=None, cy=None, force=None,
+        coeffs={'inner':1, 'outer':1, 'full':1},
+        radii={'inner':(0,1.7),'outer':(1.7,2.3),'full':(0, 2.7)},
         nbin=0, ratio=0, phase_tolerance=60, modul_tolerance=0.33,
         small_tt_regime=0.3, large_tt_regime=0.2, verbose=False, **params):
 
@@ -18,70 +15,33 @@ def run_qacits(psf_ON, psf_OFF, fwhm, inner_slope=1, outer_slope=1, full_coeff=1
             cube of on-axis PSFs
         psf_OFF (float ndarray):
             off-axis PSF frame
-        fwhm (float):
-            full width half max, in pix per lambda/D
+        img_sampling (float):
+            image sampling in pix per lambda/D
     """
 
-  
-
-    ### Compute the differential intensities in the 3 regions #################
 
     # get flux from off-axis PSF frame (photutils aperture photometry)
-    nimg = psf_OFF.shape[-1]
-    aper = CircularAperture((nimg//2, nimg//2), r=fwhm/2)
-    psf_flux = aperture_photometry(psf_OFF, aper)['aperture_sum'].data
-    if verbose is True:
-        print('photutils aperture photometry: psf_flux=%s'%np.round(psf_flux,5))
+    psf_flux = get_psf_flux(psf_OFF, img_sampling, cx=cx, cy=cy, verbose=verbose)
 
     # bin + normalize on-axis PSF cube
     psf_ON = bin_images(psf_ON, nbin)
     psf_ON /= psf_flux
-    ncube, nx, ny = psf_ON.shape
+    ncube = len(psf_ON)
 
-    # create the corresponding masks
-    # compute the differential intensities
-
-    masks = {}
-    for region in radii:
-        masks[region]= (circle_mask(psf_ON[0], radii[region][1] * fwhm, 
-                              cx=nx//2, cy=ny//2) * 
-                   (1 - circle_mask(psf_ON[0], radii[region][0] * fwhm, 
-                              cx=nx//2, cy=ny//2)))
-    
-    all_dixy = {}
-    for region in masks:
-        all_dixy1 = get_delta_i(psf_ON, radii[region][1] * fwhm,
-                                cx=nx//2, cy=ny//2)
-        if radii[region][0] !=0 :
-            all_dixy0 = get_delta_i(psf_ON, radii[region][0] * fwhm,
-                                    cx=nx//2, cy=ny//2)
-        else :
-            all_dixy0 = 0.
-        all_dixy[region] = all_dixy1 - all_dixy0
-
-    
-    #-- Debias the diff. int. computed on full area from the linear component
-    #   (estimated from the outer area)
-    all_dixy['full'] += (ratio * all_dixy['outer'])
-
-    # Transform to mod-arg (modulus-argument)
-    all_di_mod = {}
-    all_di_arg = {}
-    for region in ['inner','outer','full']:
-        all_di_mod[region] = np.sqrt(all_dixy[region][:,0]**2 + all_dixy[region][:,1]**2)
-        all_di_arg[region] = np.arctan2(all_dixy[region][:,1], all_dixy[region][:,0])
+    # compute the differential intensities in the 3 regions
+    all_di_mod, all_di_arg = get_all_di(psf_ON, radii, img_sampling, ratio=ratio, cx=cx, cy=cy)
 
     #-- inner region: linear
     inner_est      = np.zeros((ncube, 2))
-    inner_est[:,0] = all_di_mod['inner'] / inner_slope
+    inner_est[:,0] = all_di_mod['inner'] / coeffs['inner']
     inner_est[:,1] = all_di_arg['inner'] + np.pi
     #-- outer region: linear
     outer_est      = np.zeros((ncube, 2))
-    outer_est[:,0] = all_di_mod['outer'] / outer_slope
+    outer_est[:,0] = all_di_mod['outer'] / coeffs['outer']
     outer_est[:,1] = all_di_arg['outer']
     #-- full region: cubic
     full_est      = np.zeros((ncube, 2))
-    full_est[:,0] = np.abs(all_di_mod['full']/full_coeff)**(1./3.)
+    full_est[:,0] = np.abs(all_di_mod['full']/coeffs['full'])**(1/3)
     full_est[:,1] = all_di_arg['full']    
 
     #-- Estimator selection: 
