@@ -18,13 +18,12 @@ def get_psf_flux(img, radius, cx=None, cy=None, exact=_exact_default_, verbose=F
         x, y = np.meshgrid(np.arange(nx)-cx, np.arange(ny)-cy)
         r = np.abs(x + 1j*y)
         psf_flux = np.sum(img*(r <= radius))
-
     else:
         aper = photutils.CircularAperture((cx, cy), radius)
         psf_flux = photutils.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
 
     if verbose is True:
-        print('psf_flux = %s (photutils = %s)'%(np.round(psf_flux, 5), exact))
+        print('psf_flux = %s (photutils is %s)'%(np.round(psf_flux, 5), exact))
 
     return psf_flux
 
@@ -32,7 +31,7 @@ def get_psf_flux(img, radius, cx=None, cy=None, exact=_exact_default_, verbose=F
 def get_di_xy(cube, radius, cx=None, cy=None, exact=_exact_default_):
     """ 
     Computes the differential intensities along the x and y axes, based on the
-    photmetry routines in the module photutils (if available). 
+    photometry routines in the module photutils (if available). 
     
     Parameters
     ----------

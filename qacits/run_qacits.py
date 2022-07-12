@@ -5,11 +5,15 @@ import numpy as np
 
 def run_qacits(psf_ON, psf_OFF, img_sampling, cx=None, cy=None, force=None,
         coeffs={'inner':1, 'outer':1, 'full':1},
-        radii={'inner':(0,1.7),'outer':(1.7,2.3),'full':(0, 2.7)},
+        radii={'inner':(0,1.7), 'outer':(1.7,2.3), 'full':(0, 2.7)},
         nbin=0, ratio=0, phase_tolerance=60, modul_tolerance=0.33,
-        small_tt_regime=0.3, large_tt_regime=0.2, verbose=False, **params):
+        small_tt_regime=0.3, large_tt_regime=0.2, verbose=False, **qacits_params):
 
     """
+    Pointing error estimation using the QACITS model with calibrated linear 
+    coefficients (see calibrate_qacits.py), based on the QACITS method for a 
+    Vortex coronagraph of charge 2.
+
     Args:
         psf_ON (float ndarray):
             cube of on-axis PSFs
@@ -17,19 +21,35 @@ def run_qacits(psf_ON, psf_OFF, img_sampling, cx=None, cy=None, force=None,
             off-axis PSF frame
         img_sampling (float):
             image sampling in pix per lambda/D
+        coeffs (dict of float):
+            linear coefficients in the QACITS model
+
+    Return:
+        full_estimate_output (float ndarray):
+            full estimate output; first two columns are tip-tilt estimate
     """
 
-
     # get flux from off-axis PSF frame (photutils aperture photometry)
-    psf_flux = get_psf_flux(psf_OFF, img_sampling, cx=cx, cy=cy, verbose=verbose)
+    psf_flux = get_psf_flux(psf_OFF, img_sampling/2, cx=cx, cy=cy, verbose=verbose)
 
     # bin + normalize on-axis PSF cube
     psf_ON = bin_images(psf_ON, nbin)
     psf_ON /= psf_flux
-    ncube = len(psf_ON)
 
     # compute the differential intensities in the 3 regions
     all_di_mod, all_di_arg = get_all_di(psf_ON, radii, img_sampling, ratio=ratio, cx=cx, cy=cy)
+    
+    # Pointing error estimation mode
+    # ------------------------------
+    
+    ncube = len(psf_ON)
+    inner_slope = coeffs['inner']
+    outer_slope = coeffs['outer']
+    full_coeff = coeffs['full']
+    phase_tolerance = phase_tolerance
+    modul_tolerance = modul_tolerance
+    small_tt_regime = small_tt_regime
+    large_tt_regime = large_tt_regime
 
     #-- inner region: linear
     inner_est      = np.zeros((ncube, 2))
@@ -126,7 +146,7 @@ def run_qacits(psf_ON, psf_OFF, img_sampling, cx=None, cy=None, force=None,
             final_est[i,1] = np.arctan2(np.imag(meanphasor),np.real(meanphasor))
             test_output[i,:] = np.array([inout_test_phase,fullout_test_phase,np.abs(full_est[i,0]-outer_est[i,0])])
     
-    ### Final estimator in X,Y ################################################
+    #-- Final estimator in X,Y: 
     final_est_xy = np.zeros_like(final_est)
     final_est_xy[:,0] = final_est[:,0] * np.cos(final_est[:,1])
     final_est_xy[:,1] = final_est[:,0] * np.sin(final_est[:,1])
