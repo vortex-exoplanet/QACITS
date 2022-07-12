@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QACITS Workflow &#8212; QACITS v1.0.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Installing and Configuring" href="install.html" />
+    <link rel="prev" title="Welcome to QACITS’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="qacits-workflow">
+<span id="demo"></span><h1>QACITS Workflow<a class="headerlink" href="#qacits-workflow" title="Permalink to this heading">¶</a></h1>
+<p>This is intended as a very brief overview of the steps necessary to get <code class="docutils literal notranslate"><span class="pre">QACITS</span></code> running.
+This quick step guide also exists in a Jupyter notebook version: <a class="reference external" href="https://github.com/vortex-exoplanet/QACITS/blob/main/notebooks/demo.ipynb">demo.ipynb</a>.</p>
+<div class="section" id="import-packages">
+<h2>Import packages<a class="headerlink" href="#import-packages" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qacits</span> <span class="kn">import</span> <span class="n">calibrate_qacits</span><span class="p">,</span> <span class="n">run_qacits</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-demo-data">
+<h2>Load demo data<a class="headerlink" href="#load-demo-data" title="Permalink to this heading">¶</a></h2>
+<p>QACITS is supposed to run in closed loop during the full science data acquisition
+sequence. To predict pointing sensing performance, the user can also run QACITS
+on simulated data sets. For the purpose of this demonstration, we use a sample of
+short simulated observing sequences (8 seconds each).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expandvars</span><span class="p">(</span><span class="s1">&#39;$HOME/QACITS&#39;</span><span class="p">)))</span>
+<span class="n">psf_OFF</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;data/offaxis_PSF_L_CVC.fits&#39;</span><span class="p">)</span>
+<span class="n">psf_ON_calib</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;data/onaxis_PSF_L_CVC_calib.fits.gz&#39;</span><span class="p">)</span>
+<span class="n">psf_ON_jitter</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;data/onaxis_PSF_L_CVC_jitter.fits.gz&#39;</span><span class="p">)</span>
+<span class="n">tt_lamD_calib</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;data/point_8s_100ms_L_calib.fits&#39;</span><span class="p">)</span>
+<span class="n">tt_lamD_jitter</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">getdata</span><span class="p">(</span><span class="s1">&#39;data/point_8s_100ms_L_jitter.fits&#39;</span><span class="p">)</span>
+<span class="n">img_sampling</span> <span class="o">=</span> <span class="mf">3.98</span> <span class="c1"># pix per lambda/D</span>
+<span class="n">lamD</span> <span class="o">=</span> <span class="mf">21.78</span> <span class="c1"># mas per lambda/D</span>
+<span class="n">dit</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="c1"># seconds</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="qacits-default-parameters">
+<h2>QACITS default parameters<a class="headerlink" href="#qacits-default-parameters" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qacits_params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">coeffs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;inner&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;outer&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span>
+    <span class="n">radii</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;inner&#39;</span><span class="p">:(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.7</span><span class="p">),</span> <span class="s1">&#39;outer&#39;</span><span class="p">:(</span><span class="mf">1.7</span><span class="p">,</span><span class="mf">2.3</span><span class="p">),</span> <span class="s1">&#39;full&#39;</span><span class="p">:(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">2.7</span><span class="p">)},</span>
+    <span class="n">nbin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">phase_tolerance</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="n">modul_tolerance</span> <span class="o">=</span> <span class="mf">0.33</span><span class="p">,</span>
+    <span class="n">small_tt_regime</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">large_tt_regime</span> <span class="o">=</span> <span class="mf">0.2</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="calibrate-qacits-with-known-tip-tilt">
+<h2>Calibrate QACITS with known tip-tilt<a class="headerlink" href="#calibrate-qacits-with-known-tip-tilt" title="Permalink to this heading">¶</a></h2>
+<p>The linear coefficients in the QACITS model linking the differential intensity
+measured in the coronagraphic image and the pointing offsets that we want to
+determine need to be optimized because they depend on the shape of the telescope
+pupil and of the Lyot stop. During the calibration process, we measure the
+differential intensities in two regions: the inner region ranging from 0 to
+1.7 λ/D, and the outer region ranging from 1.7 to 2.3 λ/D. In addition to the
+“inner” and “outer” estimators, we also assess the “full” estimator, based on
+the cubic law relation between differential intensities and pointing error, over
+the full region (0 - 2.7 λ/D). For the remainder of our analysis, we only
+consider the outer estimator because it provides small model errors (&lt;10%) over
+a large range of offsets (up to 0.5 λ/D)</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">qacits_params</span><span class="p">[</span><span class="s1">&#39;coeffs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">calibrate_qacits</span><span class="p">(</span><span class="n">psf_ON_calib</span><span class="p">,</span> <span class="n">psf_OFF</span><span class="p">,</span> <span class="n">img_sampling</span><span class="p">,</span> <span class="n">tt_lamD_calib</span><span class="p">,</span> <span class="n">plot_fig</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">qacits_params</span><span class="p">[</span><span class="s1">&#39;force&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;outer&#39;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-qacits-pointing-error-estimation">
+<h2>Run QACITS: pointing error estimation<a class="headerlink" href="#run-qacits-pointing-error-estimation" title="Permalink to this heading">¶</a></h2>
+<p>Now that the QACITS algorithm has been calibrated, we can continue our
+performance analysis using the linear coefficient from the outer estimator, and
+perform simulations of realistic pointing error estimation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">tiptilt_estimate</span> <span class="o">=</span> <span class="n">run_qacits</span><span class="p">(</span><span class="n">psf_ON_jitter</span><span class="p">,</span> <span class="n">psf_OFF</span><span class="p">,</span> <span class="n">img_sampling</span><span class="p">,</span> <span class="o">**</span><span class="n">qacits_params</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first two columns of the output array correspond to the final estimated x
+and y tilt. They can be converted to milliarcseconds (mas) and compared to the
+read tip-tilt, in oreder to infer the RMS error value.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># convert to mas</span>
+<span class="n">tt_est</span> <span class="o">=</span> <span class="o">-</span><span class="n">tiptilt_estimate</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">lamD</span>
+<span class="n">tt_true</span> <span class="o">=</span> <span class="n">tt_lamD_jitter</span><span class="o">*</span><span class="n">lamD</span>
+<span class="c1"># rms error</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tt_est</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">tt_true</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">tt_est</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">tt_true</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">rms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dist</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">QACITS</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">QACITS Workflow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#import-packages">Import packages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#load-demo-data">Load demo data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#qacits-default-parameters">QACITS default parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#calibrate-qacits-with-known-tip-tilt">Calibrate QACITS with known tip-tilt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-qacits-pointing-error-estimation">Run QACITS: pointing error estimation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Configuring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QACITS.html">QACITS package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to QACITS’s documentation!</a></li>
+      <li>Next: <a href="install.html" title="next chapter">Installing and Configuring</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Christian Delacroix.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="_sources/demo.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
