@@ -28,10 +28,10 @@ Contents
 .. toctree::
    :maxdepth: 4
    
-   demo
    install
-   utils
+   demo
    QACITS
+
 
 
 Indices and tables

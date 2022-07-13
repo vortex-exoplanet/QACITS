@@ -1,6 +1,6 @@
 .. _demo:
 
-QACITS Workflow
+Basic usage
 ######################
 
 This is intended as a very brief overview of the steps necessary to get ``QACITS`` running.
@@ -71,7 +71,7 @@ differential intensities in two regions: the inner region ranging from 0 to
 the cubic law relation between differential intensities and pointing error, over 
 the full region (0 - 2.7 λ/D). For the remainder of our analysis, we only 
 consider the outer estimator because it provides small model errors (<10%) over 
-a large range of offsets (up to 0.5 λ/D)
+a large range of offsets (up to 0.5 λ/D).
 
 .. code-block:: python
 
@@ -92,7 +92,7 @@ perform simulations of realistic pointing error estimation.
 
 The first two columns of the output array correspond to the final estimated x 
 and y tilt. They can be converted to milliarcseconds (mas) and compared to the 
-read tip-tilt, in oreder to infer the RMS error value. 
+read tip-tilt, in order to infer the RMS error value. 
 
 .. code-block:: python
 

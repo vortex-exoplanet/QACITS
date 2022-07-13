@@ -7,6 +7,21 @@ except:
 
 
 def get_psf_flux(img, radius, cx=None, cy=None, exact=_exact_default_, verbose=False):
+    """ 
+    Computes the aperture photometry of the PSF core for a given radius
+    generally corresponding to half the FWHM. Based on photometry routines 
+    from the photutils package (if available).
+
+    Args:
+        cube (float ndarray):
+            single image or image cube of ncube frames
+        radius (float):
+            radius [pix] of the PSF core
+    
+    Returns:
+        psf_flux (float):
+            flux in the PSF core
+    """
 
     ny, nx = img.shape
     if cx == None :
@@ -30,27 +45,23 @@ def get_psf_flux(img, radius, cx=None, cy=None, exact=_exact_default_, verbose=F
 
 def get_di_xy(cube, radius, cx=None, cy=None, exact=_exact_default_):
     """ 
-    Computes the differential intensities along the x and y axes, based on the
-    photometry routines in the module photutils (if available). 
+    Computes the differential intensities along the x and y axes. Based on 
+    photometry routines from the photutils package (if available).
     
-    Parameters
-    ----------
-    cube : array_like
-        Input 2D array.
-    radius : float
-        radius of the region of interest (full, inner, or outer area).
-    cx : float, optional
-        x position of the sub-image center [pix], can be fractional.
-        If not specified, the center is defined at the center of the image.
-    cy : float, optional
-        y position of the sub-image center [pix], can be fractional.
-        If not specified, the center is defined at the center of the image.
+    Args:
+        cube (float ndarray):
+            single image or image cube of ncube frames
+        radius (float):
+            radius [pix] of the region of interest (full, inner, or outer area)
+        cx (float, optional):
+            x position of the sub-image center [pix], defaults to the image center
+        cy (float, optional):
+            y position of the sub-image center [pix], defaults to the image center
 
-    Returns
-    -------
-    di_xy : array_like
-        2D element containing the differential intensities measured along the
-        x and y axes.
+    Returns:
+        di_xy (float ndarray):
+            2D element containing the differential intensities measured along the
+            x and y axes
     """
 
     cube = np.array(cube, ndmin=3)
@@ -98,8 +109,26 @@ def get_di_xy(cube, radius, cx=None, cy=None, exact=_exact_default_):
 
 
 def get_all_di(cube, radii, img_sampling, ratio=0, cx=None, cy=None, exact=_exact_default_):
-    """
-    Compute the differential intensities for all regions.
+    """ 
+    Computes the differential intensities for all regions (full, inner, or outer 
+    area) along the x and y axes, then converts the outputs to modulus and argument.
+    Based on photometry routines from the photutils package (if available).
+
+    Args:
+        cube (float ndarray):
+            single image or image cube of ncube frames
+        radii (dict):
+            dictionary containing the radii in lambda/D for each region of interest 
+        img_sampling (float):
+            image sampling in pix per lambda/D
+
+    Returns:
+        all_di_mod (dict):
+            dictionary containing the modulus of the differential intensities
+            for each region of interest 
+        all_di_arg (dict):
+            dictionary containing the argument of the differential intensities
+            for each region of interest 
     """
 
     all_dixy = {}

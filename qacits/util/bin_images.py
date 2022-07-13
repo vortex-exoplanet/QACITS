@@ -4,21 +4,19 @@ def bin_images(cube, nbin):
     """
     Returns a cube of images averaged by bins of nbin images.
     
-    Parameters
-    ----------
-    cube (float ndarray):
-        single image or image cube of ncube frames
-    nbin (int):
-        number of images in the returned cube.
-        - if 0: no frame averaging, the returned cube is a copy of the input.
-        - if 1: returns the average of the whole cube.
-        - else: the returned cube is made of nbin images, 
-            each being the average of ncube/nbin images of the input cube.
+    Args:
+        cube (float ndarray):
+            single image or image cube of ncube frames
+        nbin (int):
+            number of images in the returned cube
+            - if 0: no frame averaging, the returned cube is a copy of the input
+            - if 1: returns the average of the whole cube
+            - else: the returned cube is made of nbin images, 
+                each being the average of ncube/nbin images of the input cube
     
-    Returns
-    -------
-    cube_binned (float ndarray):
-        binned image cube.
+    Returns:
+        cube_binned (float ndarray):
+            binned image cube
     """
 
     # image cube must be 3D numpy array

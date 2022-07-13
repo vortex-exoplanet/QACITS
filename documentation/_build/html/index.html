@@ -15,7 +15,7 @@
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="QACITS Workflow" href="demo.html" />
+    <link rel="next" title="Installing and Configuring" href="install.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -52,7 +52,12 @@ Olivier Absil, Elsa Huby, and Anne-Lise Maire.</p>
 <h2>Contents<a class="headerlink" href="#contents" title="Permalink to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demo.html">QACITS Workflow</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Configuring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="install.html#obtaining-qacits">Obtaining QACITS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#environment-and-package-dependencies">Environment and Package Dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Basic usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="demo.html#import-packages">Import packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="demo.html#load-demo-data">Load demo data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="demo.html#qacits-default-parameters">QACITS default parameters</a></li>
@@ -60,28 +65,20 @@ Olivier Absil, Elsa Huby, and Anne-Lise Maire.</p>
 <li class="toctree-l2"><a class="reference internal" href="demo.html#run-qacits-pointing-error-estimation">Run QACITS: pointing error estimation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Configuring</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="install.html#obtaining-qacits">Obtaining QACITS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="install.html#environment-and-package-dependencies">Environment and Package Dependencies</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QACITS.html">Software design</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="QACITS.html#main-modules">Main modules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="QACITS.html#calibrate-qacits">calibrate_qacits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QACITS.html#run-qacits">run_qacits</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#image-processing">Image processing</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="utils.html#bin-images">bin_images</a></li>
+<li class="toctree-l2"><a class="reference internal" href="QACITS.html#utilities">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="QACITS.html#bin-images">bin_images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QACITS.html#get-psf-flux">get_psf_flux</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QACITS.html#get-di-xy">get_di_xy</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QACITS.html#get-all-di">get_all_di</a></li>
+<li class="toctree-l3"><a class="reference internal" href="QACITS.html#archive-qacits-vlt-package-v4-ehuby">Archive: qacits_vlt_package_v4_ehuby</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#photometry">Photometry</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="utils.html#get-psf-flux">get_psf_flux</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utils.html#get-di-xy">get_di_xy</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utils.html#get-all-di">get_all_di</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="utils.html#archive-qacits-vlt-package-v4-ehuby">Archive: qacits_vlt_package_v4_ehuby</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="QACITS.html">QACITS package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="QACITS.html#calibrate-qacits">calibrate_qacits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="QACITS.html#run-qacits">run_qacits</a></li>
 </ul>
 </li>
 </ul>
@@ -115,17 +112,16 @@ Olivier Absil, Elsa Huby, and Anne-Lise Maire.</p>
 
 <h3>Navigation</h3>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="demo.html">QACITS Workflow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installing and Configuring</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils.html">Utilities</a></li>
-<li class="toctree-l1"><a class="reference internal" href="QACITS.html">QACITS package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="demo.html">Basic usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="QACITS.html">Software design</a></li>
 </ul>
 
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="#">Documentation overview</a><ul>
-      <li>Next: <a href="demo.html" title="next chapter">QACITS Workflow</a></li>
+      <li>Next: <a href="install.html" title="next chapter">Installing and Configuring</a></li>
   </ul></li>
 </ul>
 </div>
