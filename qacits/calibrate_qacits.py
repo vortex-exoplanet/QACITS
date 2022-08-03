@@ -5,7 +5,9 @@ import matplotlib.pyplot as plt
 
 
 def calibrate_qacits(psf_ON, psf_OFF, img_sampling, tt_lamD, cx=None, cy=None, 
-        radii={'inner':(0,1.7),'outer':(1.7,2.3),'full':(0, 2.7)},
+        radii={'inner':(0,1.7),'outer':(1.7,2.3),'full':(0,2.7)},
+        tt_fit_lim={'inner':(0,0.1),'outer':(0,0.5),'full':(0.2,0.5)},
+        colors={'inner':[0,0.3,0.7],'outer':[0.7,0,0.3],'full':[0,0.7,0.5]},
         nbin=0, ratio=0, plot_fig=True, verbose=False, **qacits_params):
 
     """
@@ -22,6 +24,10 @@ def calibrate_qacits(psf_ON, psf_OFF, img_sampling, tt_lamD, cx=None, cy=None,
             image sampling in pix per lambda/D
         tt_lamD (2D float ndarray):
             true x and y tip-tilt values in lambda/D used to fit the model
+        cx (float, optional):
+            x position of the sub-image center [pix], defaults to the image center
+        cy (float, optional):
+            y position of the sub-image center [pix], defaults to the image center
 
     Return:
         coeffs (dict of float):
@@ -40,11 +46,8 @@ def calibrate_qacits(psf_ON, psf_OFF, img_sampling, tt_lamD, cx=None, cy=None,
 
     # Model calibration mode
     # ----------------------
-
     tt_calib = np.sqrt(tt_lamD[:,0]**2 + tt_lamD[:,1]**2)
-    tt_fit_lim = {'inner':(0., 0.1), 'outer':(0., 0.5), 'full':(0.2, 0.5)}
     if plot_fig is True:
-        colors = {'inner':[0.,0.3,.7],'outer':[.7,0.,0.3],'full':[0.,.7,0.5]}
         plt.figure(num=1, figsize=(12,9))
         plt.clf()
         fig, ax = plt.subplots(nrows=3,ncols=2,num=1)

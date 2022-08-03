@@ -3,7 +3,7 @@ from qacits.util.psf_flux import get_psf_flux, get_all_di
 import numpy as np
 
 
-def run_qacits(psf_ON, psf_OFF, img_sampling, cx=None, cy=None, force=None,
+def run_qacits(psf_ON, psf_OFF, img_sampling, cx=None, cy=None, force='outer',
         coeffs={'inner':1, 'outer':1, 'full':1},
         radii={'inner':(0,1.7), 'outer':(1.7,2.3), 'full':(0, 2.7)},
         nbin=0, ratio=0, phase_tolerance=60, modul_tolerance=0.33,
@@ -21,6 +21,12 @@ def run_qacits(psf_ON, psf_OFF, img_sampling, cx=None, cy=None, force=None,
             off-axis PSF frame
         img_sampling (float):
             image sampling in pix per lambda/D
+        cx (float):
+            x position of the sub-image center [pix], defaults to the image center
+        cy (float):
+            y position of the sub-image center [pix], defaults to the image center
+        force (str):
+            force the QACITS estimator to use a specific estimator, defaults to 'outer'
         coeffs (dict of float):
             linear coefficients in the QACITS model
 
