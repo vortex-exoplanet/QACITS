@@ -4,7 +4,7 @@ Basic usage
 ######################
 
 This is intended as a very brief overview of the steps necessary to get ``QACITS`` running.
-This quick step guide also exists in a Jupyter notebook version: `demo.ipynb <https://github.com/vortex-exoplanet/QACITS/blob/main/notebooks/demo.ipynb>`_.
+This quick start guide also exists in a Jupyter notebook version: `demo.ipynb <https://github.com/vortex-exoplanet/QACITS/blob/main/notebooks/demo.ipynb>`_.
 
 
 Import packages
