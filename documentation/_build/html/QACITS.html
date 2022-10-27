@@ -4,7 +4,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
     <title>Software design &#8212; QACITS v1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
@@ -32,15 +33,15 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="software-design">
+  <section id="software-design">
 <span id="qacits"></span><h1>Software design<a class="headerlink" href="#software-design" title="Permalink to this heading">¶</a></h1>
-<div class="section" id="main-modules">
+<section id="main-modules">
 <h2>Main modules<a class="headerlink" href="#main-modules" title="Permalink to this heading">¶</a></h2>
 <p>Running QACITS consists of two phases. First, we determine the linear
 coefficients in the QACITS model during the calibration phase, using known
 tip-tilt offsets. Then, we use QACITS with the calculated coefficients to
 perform real-time pointing error estimation on realistic data sets.</p>
-<div class="section" id="calibrate-qacits">
+<section id="calibrate-qacits">
 <h3>calibrate_qacits<a class="headerlink" href="#calibrate-qacits" title="Permalink to this heading">¶</a></h3>
 <p>Calibration function for computing the linear coefficients in the QACITS model
 using known tip-tilt offsets, based on the QACITS method for a Vortex
@@ -63,8 +64,8 @@ coronagraph of charge 2.</p>
 </dl>
 </dd>
 </dl>
-</div>
-<div class="section" id="run-qacits">
+</section>
+<section id="run-qacits">
 <h3>run_qacits<a class="headerlink" href="#run-qacits" title="Permalink to this heading">¶</a></h3>
 <p>Pointing error estimation using the QACITS model with calibrated linear
 coefficients (see calibrate_qacits.py), based on the QACITS method for a
@@ -87,13 +88,13 @@ Vortex coronagraph of charge 2.</p>
 </dl>
 </dd>
 </dl>
-</div>
-</div>
-<div class="section" id="utilities">
+</section>
+</section>
+<section id="utilities">
 <h2>Utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">¶</a></h2>
 <p>QACITS provides a few utilities for image processing and photometry, stored as
 standalone modules in the <code class="docutils literal notranslate"><span class="pre">util</span></code> folder.</p>
-<div class="section" id="bin-images">
+<section id="bin-images">
 <h3>bin_images<a class="headerlink" href="#bin-images" title="Permalink to this heading">¶</a></h3>
 <p>Returns a cube of images averaged by bins of nbin images.</p>
 <dl class="simple">
@@ -115,8 +116,8 @@ standalone modules in the <code class="docutils literal notranslate"><span class
 </dl>
 </dd>
 </dl>
-</div>
-<div class="section" id="get-psf-flux">
+</section>
+<section id="get-psf-flux">
 <h3>get_psf_flux<a class="headerlink" href="#get-psf-flux" title="Permalink to this heading">¶</a></h3>
 <p>Computes the aperture photometry of the PSF core for a given radius
 generally corresponding to half the FWHM. Based on photometry routines
@@ -135,8 +136,8 @@ from the photutils package (if available).</p>
 </dl>
 </dd>
 </dl>
-</div>
-<div class="section" id="get-di-xy">
+</section>
+<section id="get-di-xy">
 <h3>get_di_xy<a class="headerlink" href="#get-di-xy" title="Permalink to this heading">¶</a></h3>
 <p>Computes the differential intensities along the x and y axes. Based on
 photometry routines from the photutils package (if available).</p>
@@ -159,8 +160,8 @@ x and y axes</p>
 </dl>
 </dd>
 </dl>
-</div>
-<div class="section" id="get-all-di">
+</section>
+<section id="get-all-di">
 <h3>get_all_di<a class="headerlink" href="#get-all-di" title="Permalink to this heading">¶</a></h3>
 <p>Computes the differential intensities for all regions (full, inner, or outer
 area) along the x and y axes, then converts the outputs to modulus and argument.
@@ -185,12 +186,12 @@ for each region of interest</p>
 </dl>
 </dd>
 </dl>
-</div>
-<div class="section" id="archive-qacits-vlt-package-v4-ehuby">
+</section>
+<section id="archive-qacits-vlt-package-v4-ehuby">
 <h3>Archive: qacits_vlt_package_v4_ehuby<a class="headerlink" href="#archive-qacits-vlt-package-v4-ehuby" title="Permalink to this heading">¶</a></h3>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
           </div>
@@ -248,6 +249,14 @@ for each region of interest</p>
     </div>
 </div>
 <script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
         </div>
       </div>
       <div class="clearer"></div>
@@ -257,7 +266,7 @@ for each region of interest</p>
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
       <a href="_sources/QACITS.rst.txt"
