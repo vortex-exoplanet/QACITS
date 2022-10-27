@@ -12,7 +12,17 @@ release from:
 
 https://github.com/vortex-exoplanet/QACITS/releases
 
-Environment and Package Dependencies
+Installing QACITS
+==========================================
+
+You can download ``QACITS`` from its GitHub repository as a zip file. A ``setup.py`` file (setuptools) is included in the root folder of ``QACITS``.
+Enter the package's root folder and run:
+
+.. code-block:: bash
+
+  $ python setup.py install
+
+Python Package Dependencies
 ==========================================
 
 ``QACITS`` requires Python 3.6+ and the following packages:
@@ -22,3 +32,8 @@ Environment and Package Dependencies
 * numpy
 * scipy
 * matplotlib (for visualization of results only)
+
+Run-time Environment and Deployment 
+==========================================
+
+While in closed-loop observation mode, QACITS should run on a real-time clock workstation, featuring high core CPU count and sufficient main memory. 
