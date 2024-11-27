@@ -1,10 +1,10 @@
 import numpy as np
 try:
-    import photutils
+    # import photutils
+    from photutils import aperture
     _exact_default_ = True
 except:
     _exact_default_ = False
-
 
 def get_psf_flux(img, radius, cx=None, cy=None, exact=_exact_default_, verbose=False):
     """ 
@@ -34,8 +34,8 @@ def get_psf_flux(img, radius, cx=None, cy=None, exact=_exact_default_, verbose=F
         r = np.abs(x + 1j*y)
         psf_flux = np.sum(img*(r <= radius))
     else:
-        aper = photutils.CircularAperture((cx, cy), radius)
-        psf_flux = photutils.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
+        aper = aperture.CircularAperture((cx, cy), radius)
+        psf_flux = aperture.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
 
     if verbose is True:
         print('psf_flux = %s (photutils is %s)'%(np.round(psf_flux, 5), exact))
@@ -87,19 +87,19 @@ def get_di_xy(cube, radius, cx=None, cy=None, exact=_exact_default_):
             Iy = Sxy - 2*np.interp(cy, np.arange(ny)+.5, Sy)
             di_xy.append([Ix, Iy])
     else:
-        aper = photutils.CircularAperture((cx, cy), radius)
+        aper = aperture.CircularAperture((cx, cy), radius)
         y, x = np.indices((ny,nx))
         cx1 = np.floor(cx)-1
         cy1 = np.floor(cy)-1
         for img in cube:
-            Sxy = photutils.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
-            x_flux1 = photutils.aperture_photometry(img*(x<=cx1), aper, method='exact')['aperture_sum'][0]
-            x_flux2 = photutils.aperture_photometry(img*(x<=(cx1+1)), aper, method='exact')['aperture_sum'][0]
-            x_flux3 = photutils.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
+            Sxy = aperture.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
+            x_flux1 = aperture.aperture_photometry(img*(x<=cx1), aper, method='exact')['aperture_sum'][0]
+            x_flux2 = aperture.aperture_photometry(img*(x<=(cx1+1)), aper, method='exact')['aperture_sum'][0]
+            x_flux3 = aperture.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
             Sx = [x_flux1, x_flux2, x_flux3]
-            y_flux1 = photutils.aperture_photometry(img*(y<=cy1), aper, method='exact')['aperture_sum'][0]
-            y_flux2 = photutils.aperture_photometry(img*(y<=(cy1+1)), aper, method='exact')['aperture_sum'][0]
-            y_flux3 = photutils.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
+            y_flux1 = aperture.aperture_photometry(img*(y<=cy1), aper, method='exact')['aperture_sum'][0]
+            y_flux2 = aperture.aperture_photometry(img*(y<=(cy1+1)), aper, method='exact')['aperture_sum'][0]
+            y_flux3 = aperture.aperture_photometry(img, aper, method='exact')['aperture_sum'][0]
             Sy = [y_flux1, y_flux2, y_flux3]
             Ix = Sxy - 2*np.interp(cx, [cx1+.5, cx1+1.5, nx], Sx)
             Iy = Sxy - 2*np.interp(cy, [cy1+.5, cy1+1.5, ny], Sy)

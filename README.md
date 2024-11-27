@@ -4,12 +4,23 @@
 QACITS is a python package for pointing sensing, developed primarily for the ELT/[METIS](https://elt.eso.org/instrument/METIS/) instrument.
 
 ## Python Package Dependencies
+Current
+[![Python](https://img.shields.io/badge/Python-3.12.2-brightgreen.svg)]()  
+[![Numpy](https://img.shields.io/badge/Numpy-1.26.4-brightgreen.svg)]()
+[![Scipy](https://img.shields.io/badge/Scipy-1.14.1-brightgreen.svg)]()
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-3.9.2-brightgreen.svg)]()  
+[![Photutils](https://img.shields.io/badge/Photutils-2.0.2-brightgreen.svg)]()
+[![Astropy](https://img.shields.io/badge/Astropy-6.1.3-brightgreen.svg)]()
+
+QACITS v1.0.0 dependencies:
 [![Python](https://img.shields.io/badge/Python-3.7.0-brightgreen.svg)]()  
 [![Numpy](https://img.shields.io/badge/Numpy-1.21.2-brightgreen.svg)]()
 [![Scipy](https://img.shields.io/badge/Scipy-1.1.0-brightgreen.svg)]()
 [![Matplotlib](https://img.shields.io/badge/Matplotlib-3.3.0-brightgreen.svg)]()  
 [![Photutils](https://img.shields.io/badge/Photutils-0.7.2-brightgreen.svg)]()
 [![Astropy](https://img.shields.io/badge/Astropy-3.2.3-brightgreen.svg)]()
+
+
 
 ## Documentation and Quick Start Guide
 - https://qacits.readthedocs.io
